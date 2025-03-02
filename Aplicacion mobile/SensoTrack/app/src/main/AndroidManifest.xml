@@ -1,0 +1,74 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.sensotrack">
+
+    <!-- Permisos necesarios -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- Permiso para ejecutar un Foreground Service de tipo "health" -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
+
+    <!-- Permisos requeridos para sensores de salud y movimiento -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SensoTrack">
+
+        <!-- Actividad principal -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Servicios -->
+        <service
+            android:name=".LocationService"
+            android:foregroundServiceType="location"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".SensorService"
+            android:foregroundServiceType="health"
+            android:enabled="true"
+            android:exported="true" />
+
+        <!-- BroadcastReceiver para detectar bloqueo/desbloqueo de pantalla -->
+        <receiver
+            android:name=".ScreenReceiver"
+            android:exported="false">  <!-- Ajustado para Android 12+ -->
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Otros BroadcastReceivers -->
+        <receiver
+            android:name=".LocationServiceRestarter"
+            android:exported="false"/>  <!-- Ahora explícitamente declarado -->
+
+        <receiver
+            android:name=".SensorServiceRestarter"
+            android:exported="false"/>  <!-- Ahora explícitamente declarado -->
+
+    </application>
+
+</manifest>
